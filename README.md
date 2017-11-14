@@ -61,7 +61,19 @@ To run CloudFlow on your Mistral instance:
 8. Whenever there is an update to CloudFlow, simply download the latest version
   and extract it in the same place.
 
-A Dockerfile will be provided in future release.
+## Docker Installation
+
+Build docker image
+
+```bash
+docker build -t cloud-flow .
+```
+
+Start docker container
+
+```bash
+docker run -d --rm --net=host --name cloud-flow cloud-flow
+```
 
 ## Authentication
 ### OpenID Connect
