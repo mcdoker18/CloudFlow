@@ -1,27 +1,74 @@
-import {Component} from '@angular/core';
+// Copyright (C) 2017 Nokia
 
-/**
- * Temporary don't use a fancy countdown but this inline "Auto Refresh" span.
- * Most of the defined parameters here are not in use (besides 'value').
- */
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+
 @Component({
     selector: 'cf-countdown',
-    template: `<span class="countdown-text text-muted2"><i class="fa fa-refresh"></i> Auto Refresh: {{value}}</span>`,
+    templateUrl: "./countdown.component.html",
+    styleUrls: ['./countdown.component.scss']
 })
-export class CountdownComponent {
-    private initValue = 30;
-    private readonly counterCircleInit = 113; // must match the css value of stroke-dasharray attribute
+export class CountdownComponent implements OnInit, OnDestroy {
+    private timeout = null;
+    private INTERVAL_SEC = 30;
+    private _paused = false;
+    private _value = 0;
 
-    value = 0;
-    strokeValue = 113;
+    @Output() done = new EventEmitter<any>();
 
-    setInitValue(value: number) {
-        this.initValue = value;
+    get paused() {
+        return this._paused;
     }
 
-    setValue(tick: number) {
-        this.value = tick;
-        this.strokeValue = (this.initValue - tick) * (this.counterCircleInit / this.initValue);
+    get value() {
+        return this._value;
     }
 
+    private clearTimeout() {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+    }
+
+    ngOnInit() {
+        this._value = this.INTERVAL_SEC;
+        this.tick();
+    }
+
+    restart() {
+        this.clearTimeout();
+        this._value = this.INTERVAL_SEC;
+        this.tick();
+    }
+
+    ngOnDestroy() {
+        this.clearTimeout();
+    }
+
+    private pause() {
+        this._paused = true;
+        this.clearTimeout();
+    }
+
+    togglePause() {
+        if (this.paused) {
+            this.tick();
+        } else {
+            this.pause();
+        }
+    }
+
+    private tick() {
+        if (this.value > 0) {
+            this._paused = false;
+            this._value--;
+            this.timeout = setTimeout(() => this.tick(), 1 * 1000);
+        } else {
+            this.manualRefresh();
+        }
+    }
+
+    manualRefresh() {
+        this.clearTimeout();
+        this._value = 0;
+        this.done.emit();
+    }
 }
