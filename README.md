@@ -15,13 +15,13 @@ http://rawgit.com/nokia/CloudFlow/master/docs/index.html
 * And more...
 
 ## Table of Contents
-* [Limitations](#limitations)
+* [Requirements](#requirements)
 * [Installation](#installing-cloudflow-on-the-mistral-machine)
 * [Docker Installation](#docker-installation)
 * [Authentication](#authentication)
 * [Development and Building](#development)
 
-## Limitations
+## Requirements
 
 ### Mistral >= Pike
 CloudFlow requires Mistral **Pike** or greater, as we rely on
